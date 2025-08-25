@@ -6,6 +6,12 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "gym>=0.26.2",
+    "matplotlib>=3.10.3",
     "numpy>=2.2.6",
+    "opencv-python>=4.11.0.86",
+    "scikit-learn>=1.7.1",
+    "tinygrad>=0.10.3",
     "torch>=2.7.1",
+    "torchvision>=0.22.1",
+    "transformers>=4.55.2",
 ]
