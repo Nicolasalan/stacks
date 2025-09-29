@@ -10,6 +10,7 @@ def prediction(X, W, b):
     return stepFunction((np.matmul(X,W)+b)[0])
 
 def perceptronStep(X, y, W, b, learn_rate = 0.01):
+    # w*x_b = y
     return W, b
 
 def trainPerceptronAlgorithm(X, y, learn_rate = 0.01, num_epochs = 25):
