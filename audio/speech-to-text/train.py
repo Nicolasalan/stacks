@@ -1,4 +1,5 @@
 import os
+import random
 
 if not os.path.exists("salvos"):
     os.makedirs("salvos")
@@ -154,17 +155,26 @@ def main():
                 if passos % 20 == 0:
                     modelo.eval()
                     with torch.no_grad():
-                        audio_aleatorio = audio[1]
-                        texto_aleatorio = texto[1]
-                        texto_tokenizado = tokenizadar.encode(texto_aleatorio)
-                        x = audio_aleatorio.unsqueeze(0)
-                        saida, _ = modelo(x)
-                        ids_preditos = torch.argmax(saida, dim=-1)[0].cpu().numpy().tolist()
-                        token_preditos = []
-                        for token in ids_preditos:
-                            token_preditos.append(tokenizadar.id_to_token(token))
+                        idx_aleatorio = random.randint(0, audio.shape[0] - 1)
+                        audio_aleatorio = audio[idx_aleatorio].unsqueeze(0)
+                        texto_aleatorio = texto[idx_aleatorio]
 
-                        print(f"Texto Predito: {token_preditos}, \n Texto verdadeiro: {texto_aleatorio} \n")
+                        saida, _ = modelo(audio_aleatorio)
+                        ids_preditos = torch.argmax(saida, dim=-1)[0].cpu().numpy().tolist()
+
+                        # Decodificação CTC para remover brancos e repetidos
+                        token_preditos = []
+                        id_anterior = None
+                        for token_id in ids_preditos:
+                            if token_id != token_branco and token_id != id_anterior:
+                                token_preditos.append(tokenizadar.id_to_token(token_id))
+                            id_anterior = token_id
+
+                        texto_predito = "".join(token_preditos)
+
+                        print(f"Texto Predito:    '{texto_predito}'")
+                        print(f"Texto Verdadeiro: '{texto_aleatorio}'\n")
+                    modelo.train()
 
 if __name__ == "__main__":
     main()
